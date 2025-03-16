@@ -1,0 +1,95 @@
+openapi: 3.0.0
+servers: []
+info:
+  title: Parking Space API
+  description: Reports data on availability of parking spaces
+  contact:
+    email: jparras1@my.bcit.ca
+  version: "1.0.0"
+paths:
+  /spots/occupied:
+    post:
+      summary: Reports a parked car
+      description: Adds a new parked car report to the system
+      operationId: app.report_parked_car
+      requestBody:
+        description: Parked car report to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParkedCar'
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+  /spots/reservation:
+    post:
+      summary: Reports a parking spot reservation
+      description: Adds a new parking spot reservation report to the system
+      operationId: app.report_spot_reservation
+      requestBody:
+        description: Spot reservation to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpotReservation'
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+components:
+  schemas:
+    ParkedCar:
+      required:
+        - device_id
+        - spot_id
+        - timestamp
+        - parking_duration
+      type: object
+      properties:
+        device_id:
+          type: string
+          description: The unique ID of the device reporting the parking event
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        spot_id:
+          type: integer
+          description: The parking spot number
+          example: 17
+        timestamp:
+          type: string
+          description: timestamp when the spot was occupied
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        parking_duration:
+          type: integer
+          description: Duration in minutes for which the car will be parked.
+          example: 120
+    SpotReservation:
+      required:
+        - device_id
+        - spot_id
+        - timestamp
+        - parking_time
+      type: object
+      properties:
+        device_id:
+          type: string
+          description: The unique ID of the device reporting the parking event
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        spot_id:
+          type: integer
+          description: The parking spot number
+          example: 17
+        timestamp:
+          type: string
+          description: timestamp when the spot was occupied
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        parking_time:
+          type: string
+          description: The time when the user will occupy the spot
+          example: '2016-08-29T09:12:33.001Z'

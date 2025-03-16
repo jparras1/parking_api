@@ -1,0 +1,137 @@
+services:
+  receiver:
+    build:
+      context: receiver # location of the Dockerfile for this service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # host_machine port:container port
+    networks:
+      - my_network
+    volumes:
+      - type: bind
+        source: ${PWD}/logs/receiver.log
+        target: /app/app.log
+      - type: bind
+        source: ${PWD}/config/test/log_conf.yml
+        target: /app/log_conf.yml
+      - type: bind
+        source: ${PWD}/config/test/receiver_conf.yml
+        target: /app/app_conf.yml
+    depends_on:
+      - kafka
+  storage:
+    build:
+      context: storage
+      dockerfile: Dockerfile
+    # ports:
+    #   - "8090:8090"
+    networks:
+      - my_network
+    volumes:
+      - type: bind
+        source: ${PWD}/logs/storage.log
+        target: /app/app.log
+      - type: bind
+        source: ${PWD}/config/test/log_conf.yml
+        target: /app/log_conf.yml
+      - type: bind
+        source: ${PWD}/config/test/storage_conf.yml
+        target: /app/app_conf.yml
+    depends_on:
+      - kafka
+      - db
+  processing:
+    build:
+      context: processing
+      dockerfile: Dockerfile
+    ports:
+      - "8100:8100"
+    networks:
+      - my_network
+    volumes:
+      - type: bind
+        source: ${PWD}/logs/processing.log
+        target: /app/app.log
+      - type: bind
+        source: ${PWD}/config/test/log_conf.yml
+        target: /app/log_conf.yml
+      - type: bind
+        source: ${PWD}/config/test/processing_conf.yml
+        target: /app/app_conf.yml
+      - type: bind
+        source: ${PWD}/data/processing/processing.json
+        target: /app/stats.json
+    depends_on:
+      - storage
+  analyzer:
+    build:
+      context: analyzer
+      dockerfile: Dockerfile
+    ports:
+      - "8110:8110"
+    networks:
+      - my_network
+    volumes:
+      - type: bind
+        source: ${PWD}/logs/analyzer.log
+        target: /app/app.log
+      - type: bind
+        source: ${PWD}/config/test/log_conf.yml
+        target: /app/log_conf.yml
+      - type: bind
+        source: ${PWD}/config/test/analyzer_conf.yml
+        target: /app/app_conf.yml
+    depends_on:
+      - kafka
+  zookeeper:
+    image: wurstmeister/zookeeper
+    networks:
+      - my_network
+    volumes:
+          - zookeeper_data:/opt/zookeeper-3.4.13/data
+  kafka:
+    image: wurstmeister/kafka
+    command: [start-kafka.sh]
+    # ports:
+    #   - "9092:9092"
+    environment:
+      KAFKA_CREATE_TOPICS: "events:1:1" # topic:partition:replicas
+      KAFKA_ADVERTISED_HOST_NAME: localhost # docker-machine ip
+      KAFKA_LISTENERS: INSIDE://:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LOG_DIRS: /kafka/kafka-logs
+      KAFKA_BROKER_ID: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - type: bind
+        source: ${PWD}/data/kafka/logs
+        target: /kafka/kafka-logs
+    depends_on:
+      - zookeeper
+    networks:
+      - my_network
+  db:
+    image: mysql
+    user: "1002:1002"
+    volumes:
+      - type: bind
+        source: ${PWD}/data/database
+        target: /var/lib/mysql
+    networks:
+      - my_network
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_root
+      MYSQL_DATABASE: mysql_parking
+      MYSQL_USER: jonathan
+      MYSQL_PASSWORD: acit3855_mysql
+    # ports:
+    #   - 3306:3306
+volumes:
+  zookeeper_data:
+networks:
+  my_network:
+    driver: bridge

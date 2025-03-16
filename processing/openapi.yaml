@@ -1,0 +1,54 @@
+openapi: 3.0.0
+servers: []
+info:
+  title: Parking Space Stats API
+  description: Reports stats of parking spaces
+  contact:
+    email: jparras1@my.bcit.ca
+  version: "1.0.0"
+paths:
+  /stats:
+    get:
+      summary: Gets the event stats
+      description: Gets Occupied Parking Spots and Reserved Parking Spots processsed statistics
+      operationId: app.get_stats
+      responses:
+        '200':
+          description: Successfully returned a list of parking events
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/ReadingStats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    ReadingStats:
+      required:
+      - num_pc_reports
+      - min_parking_duration
+      - max_parking_duration
+      - num_sr_reports
+      type: object
+      properties:
+        num_pc_reports:
+          type: integer
+          example: 100
+        min_parking_duration:
+          type: integer
+          example: 30
+        max_parking_duration:
+          type: integer
+          example: 200
+        num_sr_reports:
+          type: integer
+          example: 100

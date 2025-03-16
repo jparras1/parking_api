@@ -1,0 +1,5 @@
+config/prod/
+data/
+logs/
+kafka.md
+notes.txt

@@ -1,0 +1,95 @@
+openapi: 3.0.0
+servers: []
+info:
+  title: Parking Space API
+  description: Reports data on availability of parking spaces
+  contact:
+    email: jparras1@my.bcit.ca
+  version: "1.1.0"
+paths:
+  /spots/occupied:
+    get:
+      summary: Gets the parking spots that are occupied
+      description: Gets the parking spots that are occupied after the timestamp
+      operationId: app.get_spots_occupied
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+        - name: end_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+      responses:
+        '200':
+          description: Successfully returned a list of occupied parking spots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - spot_id
+                    - timestamp
+                  properties:
+                    spot_id:
+                      type: integer
+                      description: The parking spot number
+                      example: 17
+                    timestamp:
+                      type: string
+                      description: timestamp when the spot was occupied
+                      format: date-time
+                      example: '2016-08-29T09:12:33.001Z'
+
+  /spots/reservation:
+    get:
+      summary: Gets the parking spots that are reserved
+      description: Gets the parking spots that are reserved after the timestamp
+      operationId: app.get_spots_reserved
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+        - name: end_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+      responses:
+        '200':
+          description: Successfully returned a list of reserved parking spots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - spot_id
+                    - parking_time
+                    - timestamp
+                  properties:
+                    spot_id:
+                      type: integer
+                      description: The parking spot number
+                      example: 17
+                    parking_time:
+                      type: string
+                      description: The time when the user will occupy the spot
+                      example: '2016-08-29T09:12:33.001Z'
+                    timestamp:
+                      type: string
+                      description: timestamp when the spot was reserved
+                      format: date-time
+                      example: '2016-08-29T09:12:33.001Z'

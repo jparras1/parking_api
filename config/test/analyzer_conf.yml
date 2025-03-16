@@ -1,0 +1,8 @@
+version: 1
+kafka:
+  hostname: kafka
+  port: 29092
+  topic: events
+event_type:
+  park_event: park_car
+  reserve_event: reserve_car
