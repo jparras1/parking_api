@@ -67,16 +67,26 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/ReadingStats'
+                type: object
+                required:
+                  - num_pc_reports
+                  - num_sr_reports
+                properties:
+                  num_pc_reports:
+                    type: integer
+                    example: 100
+                  num_sr_reports:
+                    type: integer
+                    example: 100
+                
 components:
   schemas:
     OccupiedSpotsReading:
       required:
-      - device_id
-      - spot_id
-      - timestamp
-      - parking_duration
+        - device_id
+        - spot_id
+        - timestamp
+        - parking_duration
       type: object
       properties:
         device_id:
@@ -125,16 +135,4 @@ components:
           description: The time when the user will occupy the spot
           format: date-time
           example: '2016-08-29T09:12:33.001Z'
-    
-    ReadingStats:
-      required:
-      - num_pc_reports
-      - num_sr_reports
-      type: object
-      properties:
-        num_pc_reports:
-          type: integer
-          example: 100
-        num_sr_reports:
-          type: integer
-          example: 100
+      

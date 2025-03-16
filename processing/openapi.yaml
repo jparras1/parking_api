@@ -19,8 +19,24 @@ paths:
             application/json:
               schema:
                 type: object
-                items:
-                  $ref: '#/components/schemas/ReadingStats'
+                required:
+                  - num_pc_reports
+                  - min_parking_duration
+                  - max_parking_duration
+                  - num_sr_reports
+                properties:
+                  num_pc_reports:
+                    type: integer
+                    example: 100
+                  min_parking_duration:
+                    type: integer
+                    example: 30
+                  max_parking_duration:
+                    type: integer
+                    example: 200
+                  num_sr_reports:
+                    type: integer
+                    example: 100
         '400':
           description: Invalid request
           content:
@@ -30,25 +46,3 @@ paths:
                 properties:
                   message:
                     type: string
-components:
-  schemas:
-    ReadingStats:
-      required:
-      - num_pc_reports
-      - min_parking_duration
-      - max_parking_duration
-      - num_sr_reports
-      type: object
-      properties:
-        num_pc_reports:
-          type: integer
-          example: 100
-        min_parking_duration:
-          type: integer
-          example: 30
-        max_parking_duration:
-          type: integer
-          example: 200
-        num_sr_reports:
-          type: integer
-          example: 100
