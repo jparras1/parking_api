@@ -7,15 +7,17 @@ services:
       - "8080:8080" # host_machine port:container port
     networks:
       - my_network
+    env_file:
+      - .env
     volumes:
       - type: bind
-        source: ${PWD}/logs/receiver.log
+        source: ${PROJECT_DIR}/logs/receiver.log
         target: /app/app.log
       - type: bind
-        source: ${PWD}/config/test/log_conf.yml
+        source: ${PROJECT_DIR}/config/test/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PWD}/config/test/receiver_conf.yml
+        source: ${PROJECT_DIR}/config/test/receiver_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
@@ -27,15 +29,17 @@ services:
     #   - "8090:8090"
     networks:
       - my_network
+    env_file:
+      - .env
     volumes:
       - type: bind
-        source: ${PWD}/logs/storage.log
+        source: ${PROJECT_DIR}/logs/storage.log
         target: /app/app.log
       - type: bind
-        source: ${PWD}/config/test/log_conf.yml
+        source: ${PROJECT_DIR}/config/test/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PWD}/config/test/storage_conf.yml
+        source: ${PROJECT_DIR}/config/test/storage_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
@@ -48,18 +52,20 @@ services:
       - "8100:8100"
     networks:
       - my_network
+    env_file:
+      - .env
     volumes:
       - type: bind
-        source: ${PWD}/logs/processing.log
+        source: ${PROJECT_DIR}/logs/processing.log
         target: /app/app.log
       - type: bind
-        source: ${PWD}/config/test/log_conf.yml
+        source: ${PROJECT_DIR}/config/test/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PWD}/config/test/processing_conf.yml
+        source: ${PROJECT_DIR}/config/test/processing_conf.yml
         target: /app/app_conf.yml
       - type: bind
-        source: ${PWD}/data/processing/processing.json
+        source: ${PROJECT_DIR}/data/processing/processing.json
         target: /app/stats.json
     depends_on:
       - storage
@@ -71,15 +77,17 @@ services:
       - "8110:8110"
     networks:
       - my_network
+    env_file:
+      - .env
     volumes:
       - type: bind
-        source: ${PWD}/logs/analyzer.log
+        source: ${PROJECT_DIR}/logs/analyzer.log
         target: /app/app.log
       - type: bind
-        source: ${PWD}/config/test/log_conf.yml
+        source: ${PROJECT_DIR}/config/test/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PWD}/config/test/analyzer_conf.yml
+        source: ${PROJECT_DIR}/config/test/analyzer_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
@@ -94,6 +102,8 @@ services:
     command: [start-kafka.sh]
     # ports:
     #   - "9092:9092"
+    env_file:
+      - .env
     environment:
       KAFKA_CREATE_TOPICS: "events:1:1" # topic:partition:replicas
       KAFKA_ADVERTISED_HOST_NAME: localhost # docker-machine ip
@@ -107,7 +117,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - type: bind
-        source: ${PWD}/data/kafka/logs
+        source: ${PROJECT_DIR}/data/kafka/logs
         target: /kafka/kafka-logs
     depends_on:
       - zookeeper
@@ -116,9 +126,11 @@ services:
   db:
     image: mysql
     user: "1002:1002"
+    env_file:
+      - .env
     volumes:
       - type: bind
-        source: ${PWD}/data/database
+        source: ${PROJECT_DIR}/data/database
         target: /var/lib/mysql
     networks:
       - my_network
