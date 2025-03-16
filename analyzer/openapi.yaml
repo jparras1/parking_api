@@ -67,17 +67,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - num_pc_reports
-                  - num_sr_reports
-                properties:
-                  num_pc_reports:
-                    type: integer
-                    example: 100
-                  num_sr_reports:
-                    type: integer
-                    example: 100
+                items:
+                  $ref: '#/components/schemas/ReadingStats'
                 
 components:
   schemas:
@@ -136,3 +127,15 @@ components:
           format: date-time
           example: '2016-08-29T09:12:33.001Z'
       
+    ReadingStats:
+      required:
+        - num_pc_reports
+        - num_sr_reports
+      type: object
+      properties:
+        num_pc_reports:
+          type: integer
+          example: 100
+        num_sr_reports:
+          type: integer
+          example: 100
