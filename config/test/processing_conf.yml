@@ -2,7 +2,7 @@ version: 1
 datastore:
   filename: stats.json
 scheduler:
-  interval: 5
+  interval: 3
 eventstores:
   park:
     url: http://storage:8090/spots/occupied
