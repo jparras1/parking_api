@@ -1,7 +1,7 @@
 version: 1
 datastore:
   user: jonathan
-  password: acit3855_mysql
+  password:
   hostname: db
   port: 3306
   db: mysql_parking
