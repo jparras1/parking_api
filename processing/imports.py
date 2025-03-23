@@ -9,3 +9,5 @@ import connexion
 from connexion import NoContent
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware

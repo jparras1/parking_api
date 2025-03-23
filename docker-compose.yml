@@ -1,4 +1,15 @@
 services:
+  dashboard:
+    build:
+      context: dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - my_network
+    depends_on:
+      - receiver
+      - analyzer
   receiver:
     build:
       context: receiver # location of the Dockerfile for this service
