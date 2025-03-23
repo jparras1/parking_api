@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="ACIT3855 statistics application" />
+    <script src="updateStats.js"></script>
+    <title>Parking API</title>
+</head>
+
+<body>
+    <main id="main">
+        <div id="header">
+            <div id="logo">
+                <img src="parking_api.jpg" alt="Logo" id="logo-img">
+            </div>
+            <h1>Parking Dashboard</h1>
+        </div>
+        <h5 id="last-updated">Last update: <span id="last-updated-value">N/A</span></h5>
+        
+        <!-- Error Message Section -->
+        <div id="messages"></div>
+        
+        <section id="statistics">
+            <h2>General Statistics</h2>
+            <div id="processing">
+                <h3>Processing Stats</h3>
+                <code id="processing-stats">Loading...</code>
+            </div>
+            <div id="analyzer">
+                <h3>Analyzer Stats</h3>
+                <code id="analyzer-stats">Loading...</code>
+            </div>
+        </section>
+
+        <section id="events">
+            <h2>Analyzer Events</h2>
+            <div class="event-item">
+                <h3>First Park Event</h3>
+                <code id="first-event-park">Loading...</code>
+            </div>
+            <div class="event-item">
+                <h3>Last Park Event</h3>
+                <code id="last-event-park">Loading...</code>
+            </div>
+            <div class="event-item">
+                <h3>First Reserve Event</h3>
+                <code id="first-event-reserve">Loading...</code>
+            </div>
+            <div class="event-item">
+                <h3>Last Reserve Event</h3>
+                <code id="last-event-reserve">Loading...</code>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

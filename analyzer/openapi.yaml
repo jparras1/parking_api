@@ -26,8 +26,31 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/OccupiedSpotsReading'
+                type: object
+                required:
+                  - device_id
+                  - spot_id
+                  - timestamp
+                  - parking_duration
+                properties:
+                  device_id:
+                    type: string
+                    description: The unique ID of the device reporting the parking event
+                    format: uuid
+                    example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                  spot_id:
+                    type: integer
+                    description: The parking spot number
+                    example: 17
+                  timestamp:
+                    type: string
+                    description: timestamp when the spot was occupied
+                    format: date-time
+                    example: '2016-08-29T09:12:33.001Z'
+                  parking_duration:
+                    type: integer
+                    description: Duration in minutes for which the car will be parked.
+                    example: 120
         '400':
           description: Invalid request
         '404':
@@ -50,8 +73,32 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/ReservedSpotsReading'
+                type: object
+                required:
+                  - device_id
+                  - spot_id
+                  - timestamp
+                  - parking_time
+                properties:
+                  device_id:
+                    type: string
+                    description: The unique ID of the device reporting the parking event
+                    format: uuid
+                    example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                  spot_id:
+                    type: integer
+                    description: The parking spot number
+                    example: 17
+                  timestamp:
+                    type: string
+                    description: timestamp when the spot was occupied
+                    format: date-time
+                    example: '2016-08-29T09:12:33.001Z'
+                  parking_time:
+                    type: string
+                    description: The time when the user will occupy the spot
+                    format: date-time
+                    example: '2016-08-29T09:12:33.001Z'
         '400':
           description: Invalid request
         '404':
@@ -67,75 +114,11 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/ReadingStats'
-                
-components:
-  schemas:
-    OccupiedSpotsReading:
-      required:
-        - device_id
-        - spot_id
-        - timestamp
-        - parking_duration
-      type: object
-      properties:
-        device_id:
-          type: string
-          description: The unique ID of the device reporting the parking event
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
-        spot_id:
-          type: integer
-          description: The parking spot number
-          example: 17
-        timestamp:
-          type: string
-          description: timestamp when the spot was occupied
-          format: date-time
-          example: '2016-08-29T09:12:33.001Z'
-        parking_duration:
-          type: integer
-          description: Duration in minutes for which the car will be parked.
-          example: 120
-
-    ReservedSpotsReading:
-      required:
-        - device_id
-        - spot_id
-        - timestamp
-        - parking_time
-      type: object
-      properties:
-        device_id:
-          type: string
-          description: The unique ID of the device reporting the parking event
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
-        spot_id:
-          type: integer
-          description: The parking spot number
-          example: 17
-        timestamp:
-          type: string
-          description: timestamp when the spot was occupied
-          format: date-time
-          example: '2016-08-29T09:12:33.001Z'
-        parking_time:
-          type: string
-          description: The time when the user will occupy the spot
-          format: date-time
-          example: '2016-08-29T09:12:33.001Z'
-      
-    ReadingStats:
-      required:
-        - num_pc_reports
-        - num_sr_reports
-      type: object
-      properties:
-        num_pc_reports:
-          type: integer
-          example: 100
-        num_sr_reports:
-          type: integer
-          example: 100
+                type: object
+                properties:
+                  num_pc_reports:
+                    type: integer
+                    example: 100
+                  num_sr_reports:
+                    type: integer
+                    example: 100

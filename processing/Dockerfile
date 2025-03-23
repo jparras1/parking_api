@@ -21,7 +21,7 @@ RUN chown -R jonathan:jonathan /app
 USER jonathan
 
 # Tells on which port the service listens in the container
-EXPOSE 8010
+EXPOSE 8100
 
 # Entrypoint = run Python
 ENTRYPOINT [ "python3" ]
