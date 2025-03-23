@@ -1,10 +1,11 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
-const PROCESSING_STATS_API_URL = "http://localhost:8100/stats"
+const BASE_URL = window.API_BASE_URL;
+const PROCESSING_STATS_API_URL = `http://${BASE_URL}:8100/stats`
 const ANALYZER_API_URL = {
-    stats: "http://localhost:8110/stats",
-    park: (index) => `http://localhost:8110/park?index=${index}`,
-    reserve: (index) => `http://localhost:8110/reserve?index=${index}`
+    stats: `http://${BASE_URL}:8110/stats`,
+    park: (index) => `http://${BASE_URL}:8110/park?index=${index}`,
+    reserve: (index) => `http://${BASE_URL}:8110/reserve?index=${index}`
 }
 
 // This function fetches and updates the general statistics
