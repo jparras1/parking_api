@@ -35,7 +35,10 @@ const getStats = () => {
     })
 
     makeReq(ANALYZER_API_URL.stats, (statsResult) => {
-        updateCodeDiv("analyzer-stats", statsResult)
+        updateCodeDiv("analyzer-stats",
+            `Number of Parked Cars: ${statsResult.num_park_car}
+            Number of Reserved Spots: ${statsResult.num_reserve_car}`
+        )
 
         // get the last index for each event
         const lastParkIndex = Math.max(statsResult.num_park_car - 1, 0)
