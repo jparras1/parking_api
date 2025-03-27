@@ -37,11 +37,11 @@ const getStats = () => {
     makeReq(ANALYZER_API_URL.stats, (statsResult) => {
         updateCodeDiv("analyzer-stats", statsResult)
 
-        // get the last index for each event
-        const lastParkIndex = Math.max(statsResult.num_park_car - 1, 0)
-        const lastReserveIndex = Math.max(statsResult.num_reserve_car - 1, 0)
-        const randomParkIndex = Math.floor(Math.random() * lastParkIndex)
-        const randomReserveIndex = Math.floor(Math.random() * lastReserveIndex)
+        // get the last index for each events
+        // const lastParkIndex = Math.max(statsResult.num_park_car - 1, 0)
+        // const lastReserveIndex = Math.max(statsResult.num_reserve_car - 1, 0)
+        const randomParkIndex = Math.floor(Math.random() * (Math.max(statsResult.num_park_car - 1, 0)))
+        const randomReserveIndex = Math.floor(Math.random() * (Math.max(statsResult.num_reserve_car - 1, 0)))
 
         makeReq(ANALYZER_API_URL.park(0), (result) => {
             updateCodeDiv("first-event-park",
