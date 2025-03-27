@@ -8,7 +8,7 @@ const ANALYZER_API_URL = {
     reserve: (index) => `http://${BASE_URL}:8110/reserve?index=${index}`
 }
 
-// This function fetches and updates the general statistics
+// This function fetches and updates the general statisticss
 const makeReq = (url, cb) => {
     fetch(url)
         .then(res => res.json())
