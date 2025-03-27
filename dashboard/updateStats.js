@@ -40,6 +40,8 @@ const getStats = () => {
         // get the last index for each event
         const lastParkIndex = Math.max(statsResult.num_park_car - 1, 0)
         const lastReserveIndex = Math.max(statsResult.num_reserve_car - 1, 0)
+        const randomParkIndex = Math.floor(Math.random() * lastParkIndex)
+        const randomReserveIndex = Math.floor(Math.random() * lastReserveIndex)
 
         makeReq(ANALYZER_API_URL.park(0), (result) => {
             updateCodeDiv("first-event-park",
@@ -47,9 +49,9 @@ const getStats = () => {
             )
         })
         
-        makeReq(ANALYZER_API_URL.park(lastParkIndex), (result) => {
+        makeReq(ANALYZER_API_URL.park(randomParkIndex), (result) => {
             updateCodeDiv("last-event-park",
-                `Parking duration of the last car: ${result.parking_duration}`
+                `Parking duration of a random car: ${result.parking_duration}`
             )
         })
 
@@ -59,9 +61,9 @@ const getStats = () => {
             )
         })
 
-        makeReq(ANALYZER_API_URL.reserve(lastReserveIndex), (result) => {
+        makeReq(ANALYZER_API_URL.reserve(randomReserveIndex), (result) => {
             updateCodeDiv("last-event-reserve",
-                `Parking time of the last spot reservation: ${result.parking_time}`
+                `Parking time of a random spot reservation: ${result.parking_time}`
             )
         })
     })
