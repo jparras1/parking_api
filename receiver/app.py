@@ -1,3 +1,5 @@
+"""Reports data on availability of parking spaces"""
+import os
 import uuid
 import yaml
 import logging
@@ -20,12 +22,12 @@ MAX_RETRIES = 10
 RETRY_DELAY = 5
 
 # load the configuration file to replace hardcoded URLs
-with open('app_conf.yml', 'r') as f:
+with open('app_conf.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
     event_config = app_config['kafka']
 
 # load the configuration file for logging
-with open("log_conf.yml", "r") as f:
+with open("log_conf.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 
@@ -38,6 +40,7 @@ logger = logging.getLogger("basicLogger")
 #
 #####################################
 def connect_to_kafka(event_config):
+    """this function connects service to kafka"""
     for attempt in range(MAX_RETRIES):
         try:
             logger.info(f"Attempt {attempt + 1} to connect to Kafka...")
@@ -59,6 +62,7 @@ def connect_to_kafka(event_config):
 client, topic, producer = connect_to_kafka(event_config)
 
 def send_to_kafka(event_type, payload):
+    """send to kafka service"""
     # add a trace_id to the JSON payload
     payload["trace_id"] = str(uuid.uuid4())
 
@@ -88,10 +92,12 @@ def send_to_kafka(event_type, payload):
 #
 #####################################
 def report_parked_car(body):
+    """Adds a new parked car report to the system"""
     event_type = app_config['event_type']['park_event']
     return send_to_kafka(event_type, body)
 
 def report_spot_reservation(body):
+    """Adds a new parking spot reservation report to the system"""
     event_type = app_config['event_type']['reserve_event']
     return send_to_kafka(event_type, body)
 
@@ -101,4 +107,5 @@ app.add_api("openapi.yaml",
             strict_validation=True,
             validate_responses=True)
 if __name__ == "__main__":
-    app.run(port=8080, host="0.0.0.0")
+    host = os.getenv("HOST")
+    app.run(port=8080, host=host)
