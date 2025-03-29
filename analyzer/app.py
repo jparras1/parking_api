@@ -29,8 +29,8 @@ with open('app_conf.yml', 'r', encoding="utf-8") as f:
 # KAFKA
 #
 #####################################
-"""this function retrieves event from kafka"""
 def retrieve_message(index, event):
+    """this function retrieves event from kafka"""
     hostname = f"{app_config['kafka']['hostname']}:{app_config['kafka']['port']}"
     client = KafkaClient(hosts=hostname)
     topic = client.topics[app_config["kafka"]["topic"].encode()]
@@ -59,8 +59,8 @@ def retrieve_message(index, event):
 # ENDPOINTS
 #
 #####################################
-"""this function Gets occupied parking spots from history"""
 def get_spots_occupied(index):
+    """this function Gets occupied parking spots from history"""
     logger.info(
         f"Request for {app_config['event_type']['park_event']} at index #{index} received"
     )
@@ -70,17 +70,19 @@ def get_spots_occupied(index):
         return result, 200
     return { "message": f"No message at index {index}!"}, 404
 
-"""this function Gets reserved parking spots from history"""
 def get_spots_reserved(index):
-    logger.info(f"Request for {app_config['event_type']['reserve_event']} at index #{index} received")
+    """this function Gets reserved parking spots from history"""
+    logger.info(
+        f"Request for {app_config['event_type']['reserve_event']} at index #{index} received"
+    )
     result = retrieve_message(index, app_config['event_type']['reserve_event'])
 
     if result:
         return result, 200
     return { "message": f"No message at index {index}!"}, 404
 
-"""Gets the count of each event currently in the queue"""
 def get_stats():
+    """Gets the count of each event currently in the queue"""
     hostname = f"{app_config['kafka']['hostname']}:{app_config['kafka']['port']}"
     client = KafkaClient(hosts=hostname)
     topic = client.topics[app_config["kafka"]["topic"].encode()]
