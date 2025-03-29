@@ -6,7 +6,7 @@ pipeline {
                     echo "Running ${env.BUILD_ID} with workspace ${env.WORKSPACE}"
 
                     sh 'python3 -m venv venv'
-                    sh 'venv/bin/pip install coverage'
+                    sh 'venv/bin/pip install bandit'
                 }
             }
             stage('Build') {
@@ -20,9 +20,9 @@ pipeline {
                     sh 'pylint --fail-under=5 analyzer/app.py'
                 }
             }
-            stage('Security') {
+            stage('Security Scan') {
                 steps {
-                    echo "security"
+                    sh 'venv/bin/bandit -r analyzer'
                 }
             }
             stage('Package') {
