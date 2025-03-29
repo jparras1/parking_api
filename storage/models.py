@@ -1,8 +1,7 @@
-from sqlalchemy.orm import DeclarativeBase, mapped_column
-from sqlalchemy import Column, Integer, String, DateTime, func, BigInteger
-# from sqlalchemy.sql.functions import now
-from datetime import datetime as dt
 import time
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Column, Integer, String
+# from sqlalchemy.sql.functions import now
 
 class Base(DeclarativeBase):
     pass
@@ -27,7 +26,6 @@ class ParkedCar(Base):
         self.timestamp = timestamp
         self.parking_duration = parking_duration
         self.trace_id = trace_id
-        # self.date_created = dt.now(ZoneInfo("America/Vancouver")) # Sets the date/time record is created
         self.date_created = int(time.time())
 
     def to_dict(self):

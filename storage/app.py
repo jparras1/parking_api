@@ -1,18 +1,18 @@
-from datetime import datetime as dt
-import yaml
+"""Reports data on availability of parking spaces"""
+import os
 import logging
 import logging.config
 import connexion
-from connexion import NoContent
-from db import make_session
 import functools
+import json
+import time
+import yaml
+from db import make_session
 from models import ParkedCar, ReserveSpot
 from sqlalchemy import select
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
-import json
 from threading import Thread
-import time
 
 #####################################
 #
@@ -23,8 +23,8 @@ import time
 MAX_RETRIES = 10
 RETRY_DELAY = 5
 
-# The decorator takes care of creating and closing sessions
 def use_db_session(func):
+    """The decorator takes care of creating and closing sessions"""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         session = make_session()
@@ -35,14 +35,14 @@ def use_db_session(func):
     return wrapper
 
 # load the configuration file for logging
-with open("log_conf.yml", "r") as f:
+with open("log_conf.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 
 logger = logging.getLogger("basicLogger")
 
 # load the configuration for environment variables
-with open('app_conf.yml', 'r') as f:
+with open('app_conf.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
     event_config = app_config['kafka']
 
@@ -53,8 +53,8 @@ with open('app_conf.yml', 'r') as f:
 #
 #####################################
 
-# Run process_messages in the background
 def setup_kafka_thread():
+    """Run process_messages in the background"""
     t1 = Thread(target=process_messages)
     t1.setDaemon(True)
     t1.start()
@@ -104,7 +104,7 @@ def process_messages():
         if msg["type"] == app_config['event_type']['park_event']:
         # Store the event1 (i.e., the payload) to the DB
             report_parked_car(payload)
-        elif msg["type"] == app_config['event_type']['reserve_event']: # Change this to your event type
+        elif msg["type"] == app_config['event_type']['reserve_event']:
         # Store the event2 (i.e., the payload) to the DB
             report_spot_reservation(payload)
 
@@ -119,7 +119,7 @@ def process_messages():
 #####################################
 @use_db_session
 def report_parked_car(session, body):
-    
+    """send park report to kafka"""
     pc = ParkedCar(body['device_id'],
                    body['spot_id'],
                    body['timestamp'],
@@ -134,7 +134,7 @@ def report_parked_car(session, body):
 
 @use_db_session
 def report_spot_reservation(session, body):
-    
+    """send reservation report to kafka"""
     sr = ReserveSpot(body['device_id'],
                      body['spot_id'],
                      body['timestamp'],
@@ -154,21 +154,30 @@ def report_spot_reservation(session, body):
 #####################################
 @use_db_session
 def get_spots_occupied(session, start_timestamp, end_timestamp):
+    """Gets the parking spots that are occupied"""
     statement = select(ParkedCar).where(
-          (ParkedCar.date_created >= start_timestamp) & (ParkedCar.date_created < end_timestamp)
+          (ParkedCar.date_created >= start_timestamp) &
+          (ParkedCar.date_created < end_timestamp)
         )
     
     results = [
         result.to_dict()
         for result in session.execute(statement).scalars().all()
     ]
-    logger.info("Found %d spots occupied (start: %s, end: %s)", len(results), start_timestamp, end_timestamp)
+    logger.info(
+        "Found %d spots occupied (start: %s, end: %s)",
+        len(results),
+        start_timestamp,
+        end_timestamp
+        )
     return results, 200
 
 @use_db_session
 def get_spots_reserved(session, start_timestamp, end_timestamp):
+    """Gets the parking spots that are reserved"""
     statement = select(ReserveSpot).where(
-          (ReserveSpot.date_created >= start_timestamp) & (ReserveSpot.date_created < end_timestamp)
+          (ReserveSpot.date_created >= start_timestamp) &
+          (ReserveSpot.date_created < end_timestamp)
         )
     
     results = [
@@ -190,5 +199,5 @@ if __name__ == "__main__":
     # create_tables()
 
     setup_kafka_thread()
-    app.run(port=8090, host="0.0.0.0")
-    # app.run(port=8090)
+    host = os.getenv("HOST")
+    app.run(port=8090, host=host)
