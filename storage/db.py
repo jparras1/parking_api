@@ -1,3 +1,4 @@
+"""connect to database"""
 import time
 import yaml
 from sqlalchemy import create_engine, text
@@ -8,15 +9,14 @@ from sqlalchemy.exc import OperationalError
 # engine = create_engine("sqlite:///parking.db")
 
 # load the configuration file for the database
-with open('app_conf.yml', 'r') as f:
+with open('app_conf.yml', 'r', encoding="utf-8") as f:
     db_config = yaml.safe_load(f.read())
     datastore = db_config['datastore']
-''' 
-1) pip install pymysql - to use SQLAlchemy with MySQL
-2) pip install cryptography - to handle secure authentication methods in mysql
-3) mysql+pymysql://<username>:<password>@<host>:<port>/<database>
 
-'''
+# 1) pip install pymysql - to use SQLAlchemy with MySQL
+# 2) pip install cryptography - to handle secure authentication methods in mysql
+# 3) mysql+pymysql://<username>:<password>@<host>:<port>/<database>
+
 
 def wait_for_db(retries=10, delay=5):
     """Waits for the database to be ready before proceeding."""
@@ -37,17 +37,17 @@ def wait_for_db(retries=10, delay=5):
                 f"Database not ready, retrying in {delay} seconds... ({attempt + 1}/{retries})"
             )
             time.sleep(delay)
-    
+
     print("Database failed to start, exiting.")
     exit(1)
 
 # Wait for the database before proceeding
-engine = wait_for_db()
+engine_db = wait_for_db()
 
 
 def make_session():
     """Factory function to get a session bound to the DB engine"""
-    return sessionmaker(bind=engine)()
+    return sessionmaker(bind=engine_db)()
 
 # test the connection to database here
 # with engine.connect() as connection:
