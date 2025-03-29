@@ -1,11 +1,11 @@
+"""This module handles audit info of the api"""
 import json
-import yaml
 import logging
 import logging.config
+import yaml
 import connexion
-from connexion import NoContent
-from pykafka import KafkaClient
 from connexion.middleware import MiddlewarePosition
+from pykafka import KafkaClient
 from starlette.middleware.cors import CORSMiddleware
 
 #####################################
@@ -14,14 +14,14 @@ from starlette.middleware.cors import CORSMiddleware
 #
 #####################################
 # load the configuration file for logging
-with open("log_conf.yml", "r") as f:
+with open("log_conf.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 
 logger = logging.getLogger("basicLogger")
 
 # load the configuration file to replace hardcoded URLs
-with open('app_conf.yml', 'r') as f:
+with open('app_conf.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 
 #####################################
@@ -29,6 +29,7 @@ with open('app_conf.yml', 'r') as f:
 # KAFKA
 #
 #####################################
+"""this function retrieves event from kafka"""
 def retrieve_message(index, event):
     hostname = f"{app_config['kafka']['hostname']}:{app_config['kafka']['port']}"
     client = KafkaClient(hosts=hostname)
@@ -46,27 +47,30 @@ def retrieve_message(index, event):
             if counter == index:
                 # return the payload if the event_message at the index is found
                 return data['payload']
-            else:
-                counter += 1
+            counter += 1
 
     consumer.stop()
     # if the event_message at index is not found, return False
     return False
-    
+
 
 #####################################
 #
 # ENDPOINTS
 #
 #####################################
+"""this function Gets occupied parking spots from history"""
 def get_spots_occupied(index):
-    logger.info(f"Request for {app_config['event_type']['park_event']} at index #{index} received")
+    logger.info(
+        f"Request for {app_config['event_type']['park_event']} at index #{index} received"
+    )
     result = retrieve_message(index, app_config['event_type']['park_event'])
 
     if result:
         return result, 200
     return { "message": f"No message at index {index}!"}, 404
 
+"""this function Gets reserved parking spots from history"""
 def get_spots_reserved(index):
     logger.info(f"Request for {app_config['event_type']['reserve_event']} at index #{index} received")
     result = retrieve_message(index, app_config['event_type']['reserve_event'])
@@ -75,6 +79,7 @@ def get_spots_reserved(index):
         return result, 200
     return { "message": f"No message at index {index}!"}, 404
 
+"""Gets the count of each event currently in the queue"""
 def get_stats():
     hostname = f"{app_config['kafka']['hostname']}:{app_config['kafka']['port']}"
     client = KafkaClient(hosts=hostname)
@@ -92,7 +97,7 @@ def get_stats():
             stats[event] += 1
         else:
             stats[event] = 1
-    
+
     consumer.stop()
     return stats, 200
 
