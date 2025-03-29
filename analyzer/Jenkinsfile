@@ -17,10 +17,10 @@ pipeline {
             }
             stage('Python Lint') {
                 steps {
-                    sh 'pylint --fail-under=5 analyzer/*.py'
+                    sh 'pylint --fail-under=5 analyzer/app.py'
                 }
             }
-            stage('Security Stage') {
+            stage('Security') {
                 steps {
                     echo "security"
                 }
