@@ -1,3 +1,4 @@
+"""creates database"""
 import sys
 from models import Base
 from db import engine
@@ -15,9 +16,7 @@ if __name__ == "__main__":
         drop_tables()
     create_tables()
 
-'''
-In the terminal, you can now use:
-python create_db.py => creates all tables
-python create_db.py drop => drops all tables
 
-'''
+# In the terminal, you can now use:
+# python create_db.py => creates all tables
+# python create_db.py drop => drops all tables

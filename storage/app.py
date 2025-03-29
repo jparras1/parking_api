@@ -2,17 +2,18 @@
 import os
 import logging
 import logging.config
-import connexion
 import functools
 import json
 import time
+from threading import Thread
+import connexion
 import yaml
 from db import make_session
 from models import ParkedCar, ReserveSpot
 from sqlalchemy import select
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
-from threading import Thread
+from pykafka.exceptions import KafkaException, SocketDisconnectedError
 
 #####################################
 #
@@ -55,9 +56,9 @@ with open('app_conf.yml', 'r', encoding="utf-8") as f:
 
 def setup_kafka_thread():
     """Run process_messages in the background"""
-    t1 = Thread(target=process_messages)
-    t1.setDaemon(True)
-    t1.start()
+    t1_kafka = Thread(target=process_messages)
+    t1_kafka.setDaemon(True)
+    t1_kafka.start()
 
 def process_messages():
     """ Process event messages """
@@ -69,8 +70,8 @@ def process_messages():
             topic = client.topics[str.encode(event_config['topic'])]
             logger.debug("Connected to Kafka successfully!")
             break
-        except Exception as e:
-            logger.warning(f"Kafka connection failed: {e}")
+        except (KafkaException, SocketDisconnectedError) as error_kafka:
+            logger.warning(f"Kafka connection failed: {error_kafka}")
             if attempt < MAX_RETRIES - 1:
                 logger.info(f"Retrying in {RETRY_DELAY} seconds...")
                 time.sleep(RETRY_DELAY)
@@ -85,7 +86,7 @@ def process_messages():
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
                                          reset_offset_on_start=False,
                                          auto_offset_reset=OffsetType.LATEST)
-    
+
     # This is blocking - it will wait for a new message
     for msg in consumer:
         # Skip if there's no message
@@ -97,7 +98,7 @@ def process_messages():
 
         msg_str = msg.value.decode('utf-8')
         msg = json.loads(msg_str)
-        logger.info("Message: %s" % msg)
+        logger.info("Message: %s", msg)
 
         payload = msg["payload"]
 
@@ -120,13 +121,13 @@ def process_messages():
 @use_db_session
 def report_parked_car(session, body):
     """send park report to kafka"""
-    pc = ParkedCar(body['device_id'],
+    pc_report = ParkedCar(body['device_id'],
                    body['spot_id'],
                    body['timestamp'],
                    body['parking_duration'],
                    body['trace_id'])
 
-    session.add(pc)
+    session.add(pc_report)
     session.commit()
 
     # log a message when an event is received
@@ -135,13 +136,13 @@ def report_parked_car(session, body):
 @use_db_session
 def report_spot_reservation(session, body):
     """send reservation report to kafka"""
-    sr = ReserveSpot(body['device_id'],
+    sr_report = ReserveSpot(body['device_id'],
                      body['spot_id'],
                      body['timestamp'],
                      body['parking_time'],
                      body['trace_id'])
 
-    session.add(sr)
+    session.add(sr_report)
     session.commit()
 
     logger.debug(f"Stored event spot_reservation with a trace id of {body['trace_id']}")
@@ -159,7 +160,7 @@ def get_spots_occupied(session, start_timestamp, end_timestamp):
           (ParkedCar.date_created >= start_timestamp) &
           (ParkedCar.date_created < end_timestamp)
         )
-    
+
     results = [
         result.to_dict()
         for result in session.execute(statement).scalars().all()
@@ -179,7 +180,7 @@ def get_spots_reserved(session, start_timestamp, end_timestamp):
           (ReserveSpot.date_created >= start_timestamp) &
           (ReserveSpot.date_created < end_timestamp)
         )
-    
+
     results = [
         result.to_dict()
         for result in session.execute(statement).scalars().all()
@@ -194,7 +195,7 @@ app.add_api("openapi.yaml",
             strict_validation=True,
             validate_responses=True)
 if __name__ == "__main__":
-    ''' Uncomment ONLY when dubugging '''
+    # Uncomment ONLY when dubugging
     # drop_tables()
     # create_tables()
 

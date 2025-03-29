@@ -1,9 +1,11 @@
+"""creates models"""
 import time
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import Column, Integer, String
 # from sqlalchemy.sql.functions import now
 
 class Base(DeclarativeBase):
+    """base"""
     pass
 
 class ParkedCar(Base):
@@ -30,16 +32,16 @@ class ParkedCar(Base):
 
     def to_dict(self):
         """ Dictionary Representation of a parked car report """
-        dict = {}
-        dict['id'] = self.id
-        dict['device_id'] = self.device_id
-        dict['spot_id'] = self.spot_id
-        dict['timestamp'] = self.timestamp
-        dict['parking_duration'] = self.parking_duration
-        dict['trace_id'] = self.trace_id
-        dict['date_created'] = self.date_created
+        my_dict = {}
+        my_dict['id'] = self.id
+        my_dict['device_id'] = self.device_id
+        my_dict['spot_id'] = self.spot_id
+        my_dict['timestamp'] = self.timestamp
+        my_dict['parking_duration'] = self.parking_duration
+        my_dict['trace_id'] = self.trace_id
+        my_dict['date_created'] = self.date_created
 
-        return dict
+        return my_dict
 
 class ReserveSpot(Base):
     """ Reserve Spot """
@@ -66,13 +68,13 @@ class ReserveSpot(Base):
 
     def to_dict(self):
         """ Dictionary Representation of a Spot Reservation Report """
-        dict = {}
-        dict['id'] = self.id
-        dict['device_id'] = self.device_id
-        dict['spot_id'] = self.spot_id
-        dict['timestamp'] = self.timestamp
-        dict['parking_time'] = self.parking_time
-        dict['trace_id'] = self.trace_id
-        dict['date_created'] = self.date_created
+        my_dict = {}
+        my_dict['id'] = self.id
+        my_dict['device_id'] = self.device_id
+        my_dict['spot_id'] = self.spot_id
+        my_dict['timestamp'] = self.timestamp
+        my_dict['parking_time'] = self.parking_time
+        my_dict['trace_id'] = self.trace_id
+        my_dict['date_created'] = self.date_created
 
-        return dict
+        return my_dict
