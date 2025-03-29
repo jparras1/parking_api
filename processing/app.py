@@ -23,19 +23,18 @@ logger = logging.getLogger("basicLogger")
 with open('app_conf.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 
-# checks if json file exists and contents
 def check_json_file(file):
+    """checks if json file exists and contents"""
     if os.path.exists(file):
-        with open(file, 'r') as fp:
+        with open(file, 'r', encoding="utf-8") as fp_file:
             try:
-                data = json.load(fp)
+                data = json.load(fp_file)
             except json.JSONDecodeError:
                 return False
-            else:
-                # check if the JSON content is empty
-                if not data:
-                    return False
-                return True
+            # check if the JSON content is empty
+            if not data:
+                return False
+            return True
     return False
 
 def min_duration(prev_min, current_entry):
@@ -116,7 +115,7 @@ def init_scheduler():
     sched.add_job(populate_stats,
                   'interval',
                   seconds=app_config['scheduler']['interval'])
-                
+
     sched.start()
 
 
@@ -129,9 +128,9 @@ def get_stats():
     if not check_json_file(app_config["datastore"]["filename"]):
         logger.error("File does not exist")
         return "Statistics do not exist", 404
-    
-    with open(app_config["datastore"]["filename"], 'r', encoding="utf-8") as fp:
-        data = json.load(fp)
+
+    with open(app_config["datastore"]["filename"], 'r', encoding="utf-8") as fp_file:
+        data = json.load(fp_file)
     logger.debug(f"Contents of the stats file: {data}")
 
     logger.info("Request completed")
