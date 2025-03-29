@@ -3,13 +3,13 @@ import os
 import uuid
 import logging
 import logging.config
-from pykafka import KafkaClient
-from pykafka.exceptions import KafkaException, SocketDisconnectedError
 import datetime
 import json
 import time
 import yaml
 import connexion
+from pykafka import KafkaClient
+from pykafka.exceptions import KafkaException, SocketDisconnectedError
 from connexion import NoContent
 
 
@@ -36,7 +36,6 @@ logger = logging.getLogger("basicLogger")
 
 class KafkaConnectionError(Exception):
     """Raised when the service fails to connect to Kafka after multiple attempts."""
-    pass
 
 
 #####################################
