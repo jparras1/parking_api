@@ -44,21 +44,20 @@ def connect_to_kafka(kafka_config):
     """this function connects service to kafka"""
     for attempt in range(MAX_RETRIES):
         try:
-            logger.info(f"Attempt {attempt + 1} to connect to Kafka...")
+            logger.info("Attempt %d to connect to Kafka...", attempt + 1)
             kafka_client = KafkaClient(hosts=f"{kafka_config['hostname']}:{kafka_config['port']}")
             kafka_topic = kafka_client.topics[str.encode(f"{kafka_config['topic']}")]
             kafka_producer = kafka_topic.get_sync_producer()
             logger.debug("Connected to Kafka successfully!")
             return kafka_client, kafka_topic, kafka_producer  # Return objects if successful
         except (KafkaException, SocketDisconnectedError) as error_kafka:
-            logger.warning(f"Kafka connection failed: {error_kafka}")
+            logger.warning("Kafka connection failed: %s", error_kafka)
             if attempt < MAX_RETRIES - 1:
                 logger.info("Retrying in %s seconds...", RETRY_DELAY)
                 time.sleep(RETRY_DELAY)
             else:
                 logger.error("Max retries reached. Exiting.")
                 raise
-    raise
 
 # Usage:
 client, topic, producer = connect_to_kafka(event_config)
