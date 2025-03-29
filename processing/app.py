@@ -1,15 +1,26 @@
-from imports import *
+"""Reports stats of parking spaces"""
+import os
+import json
+import httpx
+import yaml
+import logging
+import logging.config
+import connexion
+from apscheduler.schedulers.background import BackgroundScheduler
+import time
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware
 
 
 # load the configuration file for logging
-with open("log_conf.yml", "r") as f:
+with open("log_conf.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 
 logger = logging.getLogger("basicLogger")
 
 # load the configuration file to replace hardcoded URLs
-with open('app_conf.yml', 'r') as f:
+with open('app_conf.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 
 # checks if json file exists and contents
@@ -27,17 +38,18 @@ def check_json_file(file):
                 return True
     return False
 
-# calculate minimum parking duration value
 def min_duration(prev_min, current_entry):
+    """calculate minimum parking duration value"""
     values = [v for v in (prev_min, current_entry) if v != 0]  # Exclude 0 values
     return min(values) if values else 0  # Return min if values exist, else 0
 
-# calculate maximum parking duration value
 def max_duration(prev_max, current_entry):
+    """calculate maximum parking duration value"""
     values = [v for v in (prev_max, current_entry) if v != 0]
     return max(values) if values else 0
 
 def populate_stats():
+    """connect to storage"""
     logger.info("Processing started")
 
     # get stats
@@ -92,13 +104,14 @@ def populate_stats():
     logger.debug(f"{app_config['datastore']['filename']} updated with new values")
 
     # write all data to the JSON file
-    with open(app_config["datastore"]["filename"], 'w') as post_stats:
+    with open(app_config["datastore"]["filename"], 'w', encoding="utf-8") as post_stats:
         json.dump(data, post_stats, indent=2)
 
     logger.info("Processing completed")
 
 
 def init_scheduler():
+    """starts the scheduler"""
     sched = BackgroundScheduler(daemon=True)
     sched.add_job(populate_stats,
                   'interval',
@@ -109,6 +122,7 @@ def init_scheduler():
 
 # EVENTS
 def get_stats():
+    """Gets the event stats"""
     logger.info("Request to retrieve stats received")
 
     # check if JSON file doesn't exists
@@ -116,7 +130,7 @@ def get_stats():
         logger.error("File does not exist")
         return "Statistics do not exist", 404
     
-    with open(app_config["datastore"]["filename"], 'r') as fp:
+    with open(app_config["datastore"]["filename"], 'r', encoding="utf-8") as fp:
         data = json.load(fp)
     logger.debug(f"Contents of the stats file: {data}")
 
@@ -140,4 +154,5 @@ app.add_api("openapi.yaml",
             validate_responses=True)
 if __name__ == "__main__":
     init_scheduler()
-    app.run(port=8100, host="0.0.0.0")
+    host = os.getenv("HOST")
+    app.run(port=8100, host=host)
