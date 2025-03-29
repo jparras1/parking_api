@@ -33,7 +33,9 @@ def wait_for_db(retries=10, delay=5):
             print("Database is ready!")
             return engine  # Return the working engine
         except OperationalError:
-            print(f"Database not ready, retrying in {delay} seconds... ({attempt + 1}/{retries})")
+            print(
+                f"Database not ready, retrying in {delay} seconds... ({attempt + 1}/{retries})"
+            )
             time.sleep(delay)
     
     print("Database failed to start, exiting.")
@@ -43,8 +45,8 @@ def wait_for_db(retries=10, delay=5):
 engine = wait_for_db()
 
 
-# Factory function to get a session bound to the DB engine
 def make_session():
+    """Factory function to get a session bound to the DB engine"""
     return sessionmaker(bind=engine)()
 
 # test the connection to database here
