@@ -34,9 +34,6 @@ with open("log_conf.yml", "r", encoding="utf-8") as f:
 
 logger = logging.getLogger("basicLogger")
 
-class KafkaConnectionError(Exception):
-    """Raised when the service fails to connect to Kafka after multiple attempts."""
-
 
 #####################################
 #
@@ -56,16 +53,12 @@ def connect_to_kafka(kafka_config):
         except (KafkaException, SocketDisconnectedError) as error_kafka:
             logger.warning(f"Kafka connection failed: {error_kafka}")
             if attempt < MAX_RETRIES - 1:
-                logger.info(f"Retrying in {RETRY_DELAY} seconds...")
+                logger.info("Retrying in %s seconds...", RETRY_DELAY)
                 time.sleep(RETRY_DELAY)
             else:
                 logger.error("Max retries reached. Exiting.")
-                raise KafkaConnectionError(
-                    "Failed to connect to Kafka after multiple attempts"
-                    ) from error_kafka
-    raise KafkaConnectionError(
-                    "Failed to connect to Kafka after multiple attempts"
-                    ) from error_kafka
+                raise
+    raise
 
 # Usage:
 client, topic, producer = connect_to_kafka(event_config)
