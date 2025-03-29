@@ -5,7 +5,7 @@ LABEL maintainer="jparras1@my.bcit.ca"
 RUN mkdir /app
 RUN useradd -m jonathan
 
-# We copy just the requirements.txt first to leverage Docker cache
+# We copy just the requirements.txt first to leverage Docker caches
 # on `pip install`
 COPY ./requirements.txt /app/requirements.txt
 
