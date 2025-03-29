@@ -1,4 +1,5 @@
 """This module handles audit info of the api"""
+import os
 import json
 import logging
 import logging.config
@@ -119,5 +120,5 @@ app.add_api("openapi.yaml",
             strict_validation=True,
             validate_responses=True)
 if __name__ == "__main__":
-    # bandit: disable=B104
-    app.run(port=8110, host="0.0.0.0")
+    host = os.getenv("HOST", "0.0.0.0")
+    app.run(port=8110, host=host)
