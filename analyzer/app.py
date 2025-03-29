@@ -119,4 +119,4 @@ app.add_api("openapi.yaml",
             strict_validation=True,
             validate_responses=True)
 if __name__ == "__main__":
-    app.run(port=8110, host="0.0.0.0")
+    app.run(port=8110, host="54.213.52.230")
