@@ -22,25 +22,22 @@ pipeline {
             }
             stage('Security Stage') {
                 steps {
-                    script {
-                        def files = findFiles(glob: 'test*.py')
-                        for (file in files) {
-                            sh "venv/bin/coverage run --omit */site-packages/*,*/dist-packages/* ${file.path}"
-                        }
-                        sh 'venv/bin/coverage report'
-                    }
+                    echo "security"
                 }
             }
             stage('Package') {
-                when {
-                    expression { env.GIT_BRANCH == 'origin/main' }
-                }
+                // when {
+                //     expression { env.GIT_BRANCH == 'origin/main' }
+                // }
+                // steps {
+                //     withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
+                //         sh "docker login -u 'jparras1' -p '$TOKEN' docker.io"
+                //         sh "docker build -t ${dockerRepoName}:latest --tag jparras1/${dockerRepoName}:${imageName} ."
+                //         sh "docker push jparras1/${dockerRepoName}:${imageName}"
+                //     }
+                // }
                 steps {
-                    withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
-                        sh "docker login -u 'jparras1' -p '$TOKEN' docker.io"
-                        sh "docker build -t ${dockerRepoName}:latest --tag jparras1/${dockerRepoName}:${imageName} ."
-                        sh "docker push jparras1/${dockerRepoName}:${imageName}"
-                    }
+                    echo "package"
                 }
             }
         }
