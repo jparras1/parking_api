@@ -88,6 +88,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8110:8110"
+    environment:
+      - HOST=${HOST}
     networks:
       - my_network
     env_file:
