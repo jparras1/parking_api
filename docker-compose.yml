@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080" # host_machine port:container port
+    environment:
+      - HOST=${HOST}
     networks:
       - my_network
     env_file:
@@ -40,6 +42,8 @@ services:
       dockerfile: Dockerfile
     # ports:
     #   - "8090:8090"
+    environment:
+      - HOST=${HOST}
     networks:
       - my_network
     env_file:
@@ -63,6 +67,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8100:8100"
+    environment:
+      - HOST=${HOST}
     networks:
       - my_network
     env_file:
