@@ -5,4 +5,4 @@ kafka:
   topic: events
 event_type:
   park_event: park_car
-  reserve_event: reserve_car
+  reserve_event: reserve_spot

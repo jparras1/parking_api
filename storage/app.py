@@ -120,7 +120,7 @@ def process_messages():
 #####################################
 @use_db_session
 def report_parked_car(session, body):
-    """send park report to kafka"""
+    """send park report from kafka to db"""
     pc_report = ParkedCar(body['device_id'],
                    body['spot_id'],
                    body['timestamp'],
@@ -135,7 +135,7 @@ def report_parked_car(session, body):
 
 @use_db_session
 def report_spot_reservation(session, body):
-    """send reservation report to kafka"""
+    """send reservation report from kafka to db"""
     sr_report = ReserveSpot(body['device_id'],
                      body['spot_id'],
                      body['timestamp'],
@@ -189,6 +189,53 @@ def get_spots_reserved(session, start_timestamp, end_timestamp):
                 len(results), start_timestamp, end_timestamp)
     return results, 200
 
+@use_db_session
+def get_num_events(session):
+    """Gets all events"""
+    park_statement = select(ParkedCar)
+
+    num_park_rows = [
+        result.to_dict()
+        for result in session.execute(park_statement).scalars().all()
+    ]
+
+    reserve_statement = select(ReserveSpot)
+
+    num_reserve_rows = [
+        result.to_dict()
+        for result in session.execute(reserve_statement).scalars().all()
+    ]
+
+    results = {
+        f"{app_config['event_type']['park_event']}" : len(num_park_rows),
+        f"{app_config['event_type']['reserve_event']}" : len(num_reserve_rows)
+    }
+
+    return results, 200
+
+@use_db_session
+def get_park_event_list(session):
+    """Gets the parking spots event id and trace id"""
+    statement = select(ParkedCar.device_id, ParkedCar.trace_id)
+
+    results = [
+        {"device_id": device_id, "trace_id": trace_id}
+        for device_id, trace_id in session.execute(statement).all()
+    ]
+
+    logger.debug(f"{results}")
+    return results, 200
+
+@use_db_session
+def get_reserve_event_list(session):
+    """Gets the parking spots event id and trace id"""
+    statement = select(ReserveSpot.device_id, ReserveSpot.trace_id)
+
+    results = [
+        {"device_id": device_id, "trace_id": trace_id}
+        for device_id, trace_id in session.execute(statement).all()
+    ]
+    return results, 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yaml",

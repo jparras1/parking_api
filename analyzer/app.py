@@ -104,6 +104,50 @@ def get_stats():
     consumer.stop()
     return stats, 200
 
+def get_park_event_list():
+    """Gets the parking spots event id and trace id"""
+    hostname = f"{app_config['kafka']['hostname']}:{app_config['kafka']['port']}"
+    client = KafkaClient(hosts=hostname)
+    topic = client.topics[app_config["kafka"]["topic"].encode()]
+    consumer = topic.get_simple_consumer(reset_offset_on_start=True,
+                                         consumer_timeout_ms=1000)
+
+    results = []
+    for msg in consumer:
+        message = msg.value.decode("utf-8")
+        data = json.loads(message)
+
+        if data['type'] == app_config['event_type']['park_event']:
+            event_payload = {
+                "device_id" : data['payload']['device_id'],
+                "trace_id" : data['payload']['trace_id']
+            }
+        results.append(event_payload)
+
+    return results, 200
+
+def get_reserve_event_list():
+    """Gets the parking spots event id and trace id"""
+    hostname = f"{app_config['kafka']['hostname']}:{app_config['kafka']['port']}"
+    client = KafkaClient(hosts=hostname)
+    topic = client.topics[app_config["kafka"]["topic"].encode()]
+    consumer = topic.get_simple_consumer(reset_offset_on_start=True,
+                                         consumer_timeout_ms=1000)
+
+    results = []
+    for msg in consumer:
+        message = msg.value.decode("utf-8")
+        data = json.loads(message)
+
+        if data['type'] == app_config['event_type']['reserve_event']:
+            event_payload = {
+                "device_id" : data['payload']['device_id'],
+                "trace_id" : data['payload']['trace_id']
+            }
+        results.append(event_payload)
+
+    return results, 200
+
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 
