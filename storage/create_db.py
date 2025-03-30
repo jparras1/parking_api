@@ -1,15 +1,15 @@
 """creates database"""
 import sys
 from models import Base
-from db import engine
+from db import engine_db
 
 def create_tables():
     """create db tables"""
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine_db)
 
 def drop_tables():
     """delete db tables"""
-    Base.metadata.drop_all(engine)
+    Base.metadata.drop_all(engine_db)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "drop":
