@@ -13,9 +13,7 @@ services:
       - receiver
       - analyzer
   receiver:
-    build:
-      context: receiver # location of the Dockerfile for this service
-      dockerfile: Dockerfile
+    image: jparras1/receiver:receiverapp
     ports:
       - "8080:8080" # host_machine port:container port
     environment:
@@ -37,9 +35,7 @@ services:
     depends_on:
       - kafka
   storage:
-    build:
-      context: storage
-      dockerfile: Dockerfile
+    image: jparras1/storage:storageapp
     # ports:
     #   - "8090:8090"
     environment:
@@ -62,9 +58,7 @@ services:
       - kafka
       - db
   processing:
-    build:
-      context: processing
-      dockerfile: Dockerfile
+    image: jparras1/processing:processingapp
     ports:
       - "8100:8100"
     environment:
@@ -89,9 +83,7 @@ services:
     depends_on:
       - storage
   analyzer:
-    build:
-      context: analyzer
-      dockerfile: Dockerfile
+    image: jparras1/analyzer:analyzerapp
     ports:
       - "8110:8110"
     environment:
