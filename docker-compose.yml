@@ -1,5 +1,6 @@
 services:
   dashboard:
+    container_name: dashboard
     build:
       context: dashboard
       dockerfile: Dockerfile
@@ -13,6 +14,7 @@ services:
       - receiver
       - analyzer
   receiver:
+    container_name: receiver
     image: jparras1/receiver:receiverapp
     ports:
       - "8080:8080" # host_machine port:container port
@@ -24,17 +26,18 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/receiver.log
+        source: ${PWD}/logs/receiver.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/receiver_conf.yml
+        source: ${PWD}/config/prod/receiver_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
   storage:
+    container_name: storage
     image: jparras1/storage:storageapp
     # ports:
     #   - "8090:8090"
@@ -46,18 +49,19 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/storage.log
+        source: ${PWD}/logs/storage.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/storage_conf.yml
+        source: ${PWD}/config/prod/storage_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
       - db
   processing:
+    container_name: processing
     image: jparras1/processing:processingapp
     ports:
       - "8100:8100"
@@ -69,20 +73,21 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/processing.log
+        source: ${PWD}/logs/processing.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/processing_conf.yml
+        source: ${PWD}/config/prod/processing_conf.yml
         target: /app/app_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/data/processing/processing.json
+        source: ${PWD}/data/processing/processing.json
         target: /app/stats.json
     depends_on:
       - storage
   analyzer:
+    container_name: analyzer
     image: jparras1/analyzer:analyzerapp
     ports:
       - "8110:8110"
@@ -94,23 +99,55 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/analyzer.log
+        source: ${PWD}/logs/analyzer.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/analyzer_conf.yml
+        source: ${PWD}/config/prod/analyzer_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
+  consistency_check:
+    container_name: consistency_check
+    build:
+      context: consistency_check
+      dockerfile: Dockerfile
+    ports:
+      - "8120:8120"
+    environment:
+      - HOST=${HOST}
+    networks:
+      - my_network
+    env_file:
+      - .env
+    volumes:
+      - type: bind
+        source: ${PWD}/logs/consistency.log
+        target: /app/app.log
+      - type: bind
+        source: ${PWD}/config/prod/log_conf.yml
+        target: /app/log_conf.yml
+      - type: bind
+        source: ${PWD}/config/prod/consistency_conf.yml
+        target: /app/app_conf.yml
+      - type: bind
+        source: ${PWD}/data/consistency_check/consistency.json
+        target: /app/stats.json
+    depends_on:
+      - storage
+      - analyzer
+      - processing
   zookeeper:
+    container_name: zookeeper
     image: wurstmeister/zookeeper
     networks:
       - my_network
     volumes:
           - zookeeper_data:/opt/zookeeper-3.4.13/data
   kafka:
+    container_name: kafka
     image: wurstmeister/kafka
     command: [start-kafka.sh]
     # ports:
@@ -130,20 +167,21 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - type: bind
-        source: ${PROJECT_DIR}/data/kafka/logs
+        source: ${PWD}/data/kafka/logs
         target: /kafka/kafka-logs
     depends_on:
       - zookeeper
     networks:
       - my_network
   db:
+    container_name: mysql_db
     image: mysql
     user: "1002:1002"
     env_file:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/data/database
+        source: ${PWD}/data/database
         target: /var/lib/mysql
     networks:
       - my_network

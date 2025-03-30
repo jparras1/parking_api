@@ -116,9 +116,56 @@ paths:
               schema:
                 type: object
                 properties:
-                  num_pc_reports:
+                  num_park_car:
                     type: integer
                     example: 100
-                  num_sr_reports:
+                  num_reserve_spot:
                     type: integer
                     example: 100
+  /id/park:
+    get:
+      summary: Gets the list of event IDs and trace IDs of the park event
+      description: Gets the list of event IDs and trace IDs of the park event
+      operationId: app.get_park_event_list
+      responses:
+        '200':
+          description: Successfully returned a list event ids and trace ids of the park event
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id:
+                      type: string
+                      description: the id of an event
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    trace_id:
+                      type: string
+                      description: the trace id of an event
+                      example: '3434efeasef'
+
+  /id/reserve:
+    get:
+      summary: Gets the list of event IDs and trace IDs of the reserve event
+      description: Gets the list of event IDs and trace IDs of the reserve event
+      operationId: app.get_reserve_event_list
+      responses:
+        '200':
+          description: Successfully returned a list event ids and trace ids of the reserve event
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id:
+                      type: string
+                      description: the id of an event
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    trace_id:
+                      type: string
+                      description: the trace id of an event
+                      example: '3434efeasef'
