@@ -73,9 +73,7 @@ def populate_stats():
         "start_timestamp" : start,
         "end_timestamp" : end
     }
-    logger.info("Connecting to storage")
     parking_res = httpx.get(app_config['eventstores']['park']['url'], params=params)
-    logger.inf("Connected")
     if parking_res.status_code == 200:
         logger.info(f"{len(parking_res.json())} reports found for occupied parking spots")
     else:
