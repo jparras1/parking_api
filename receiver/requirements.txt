@@ -1,3 +1,0 @@
-connexion[flask, uvicorn, swagger-ui]
-pykafka
-setuptools
