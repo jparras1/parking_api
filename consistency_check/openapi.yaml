@@ -48,14 +48,13 @@ components:
     Checks:
       required:
       - counts
-      - not_in_db
-      - not_in_queue
+      - missing_in_db
+      - missing_in_queue
       - last_updated
       type: object
       properties:
         last_updated:
-          type: string
-          format: date-time
+          type: integer
         counts:
           type: object
           properties:
@@ -80,22 +79,22 @@ components:
                   type: integer
                 event2:
                   type: integer
-        not_in_db:
+        missing_in_db:
           type: array
           items:
             type: object
             properties:
               event_id:
-                type: integer
+                type: string
               trace_id:
-                type: integer
-        not_in_queue:
+                type: string
+        missing_in_queue:
           type: array
           items:
             type: object
             properties:
               event_id:
-                type: integer
+                type: string
               trace_id:
-                type: integer
+                type: string
 

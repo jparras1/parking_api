@@ -149,6 +149,7 @@ def run_consistency_checks():
     with open(app_config["datastore"]["filename"], 'w', encoding="utf-8") as post_stats:
         json.dump(results, post_stats, indent=2)
 
+    global CHECK_FLAG
     CHECK_FLAG = True
 
     end = int(time.time() * 1000)
