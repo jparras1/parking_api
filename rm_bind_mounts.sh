@@ -38,8 +38,15 @@ else
     echo "Failed to clear contents of processing.json."
 fi
 
+# Remove the contents of the consistency JSON file
+if > "$CURRENT_DIRECTORY/data/consistency_check/consistency.json"; then
+    echo "Contents of consistency.json cleared successfully."
+else
+    echo "Failed to clear contents of consistency.json."
+fi
+
 # Remove all the contents of the service logs
-if > "$LOGS/analyzer.log" && > "$LOGS/processing.log" && > "$LOGS/receiver.log" && > "$LOGS/storage.log"; then
+if > "$LOGS/analyzer.log" && > "$LOGS/processing.log" && > "$LOGS/receiver.log" && > "$LOGS/storage.log" && > "$LOGS/consistency.log"; then
     echo "Service logs cleared successfully."
 else
     echo "Failed to clear service logs."
