@@ -26,13 +26,13 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/receiver.log
+        source: ${PWD}/logs/receiver.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/receiver_conf.yml
+        source: ${PWD}/config/prod/receiver_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
@@ -49,13 +49,13 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/storage.log
+        source: ${PWD}/logs/storage.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/storage_conf.yml
+        source: ${PWD}/config/prod/storage_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
@@ -67,22 +67,23 @@ services:
       - "8100:8100"
     environment:
       - HOST=${HOST}
+      - CORS_ALLOW_ALL=no
     networks:
       - my_network
     env_file:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/processing.log
+        source: ${PWD}/logs/processing.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/processing_conf.yml
+        source: ${PWD}/config/prod/processing_conf.yml
         target: /app/app_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/data/processing/processing.json
+        source: ${PWD}/data/processing/processing.json
         target: /app/stats.json
     depends_on:
       - storage
@@ -93,19 +94,20 @@ services:
       - "8110:8110"
     environment:
       - HOST=${HOST}
+      - CORS_ALLOW_ALL=no
     networks:
       - my_network
     env_file:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/analyzer.log
+        source: ${PWD}/logs/analyzer.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/analyzer_conf.yml
+        source: ${PWD}/config/prod/analyzer_conf.yml
         target: /app/app_conf.yml
     depends_on:
       - kafka
@@ -124,16 +126,16 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/logs/consistency.log
+        source: ${PWD}/logs/consistency.log
         target: /app/app.log
       - type: bind
-        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        source: ${PWD}/config/prod/log_conf.yml
         target: /app/log_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/config/test/consistency_conf.yml
+        source: ${PWD}/config/prod/consistency_conf.yml
         target: /app/app_conf.yml
       - type: bind
-        source: ${PROJECT_DIR}/data/consistency_check/consistency.json
+        source: ${PWD}/data/consistency_check/consistency.json
         target: /app/stats.json
     depends_on:
       - storage
@@ -167,7 +169,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - type: bind
-        source: ${PROJECT_DIR}/data/kafka/logs
+        source: ${PWD}/data/kafka/logs
         target: /kafka/kafka-logs
     depends_on:
       - zookeeper
@@ -181,7 +183,7 @@ services:
       - .env
     volumes:
       - type: bind
-        source: ${PROJECT_DIR}/data/database
+        source: ${PWD}/data/database
         target: /var/lib/mysql
     networks:
       - my_network
