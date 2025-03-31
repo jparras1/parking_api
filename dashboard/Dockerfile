@@ -2,6 +2,9 @@ FROM nginx
 
 LABEL maintainer="jparras1@my.bcit.ca"
 
+# Copy configuration files to nginx
+COPY dashboard.conf /etc/nginx/conf.d/default.conf
+
 # Copy files to the nginx
 COPY . /usr/share/nginx/html
 

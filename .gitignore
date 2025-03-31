@@ -7,3 +7,4 @@ notes.txt
 hello.txt
 rm_bind_mounts.sh
 rm_meta_properties.sh
+.env
