@@ -122,8 +122,9 @@ def get_park_event_list():
                 "device_id" : data['payload']['device_id'],
                 "trace_id" : data['payload']['trace_id']
             }
-        results.append(event_payload)
+            results.append(event_payload)
 
+    consumer.stop()
     return results, 200
 
 def get_reserve_event_list():
@@ -144,8 +145,9 @@ def get_reserve_event_list():
                 "device_id" : data['payload']['device_id'],
                 "trace_id" : data['payload']['trace_id']
             }
-        results.append(event_payload)
+            results.append(event_payload)
 
+    consumer.stop()
     return results, 200
 
 

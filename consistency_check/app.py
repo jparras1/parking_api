@@ -112,6 +112,7 @@ def run_consistency_checks():
     analyzer_pc_id = httpx.get(eventstores['analyzer_stats']['park_ids_url'])
     logger.debug(f"{analyzer_pc_id.json()}")
     analyzer_sr_id = httpx.get(eventstores['analyzer_stats']['reserve_ids_url'])
+    logger.debug(f"{analyzer_sr_id.json()}")
 
     # connect to storage and get the count
     storage_stats = httpx.get(eventstores['storage_stats']['stats_url'])
