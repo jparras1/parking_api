@@ -1,0 +1,17 @@
+version: 1
+datastore:
+  filename: stats.json
+event_type:
+  park_event: park_car
+  reserve_event: reserve_spot
+eventstores:
+  processing_stats:
+    stats_url: http://processing:8100/stats
+  analyzer_stats:
+    stats_url: http://analyzer:8110/stats
+    park_ids_url: http://analyzer:8110/id/park
+    reserve_ids_url: http://analyzer:8110/id/reserve
+  storage_stats:
+    stats_url: http://storage:8090/count/event
+    park_ids_url: http://storage:8090/id/park
+    reserve_ids_url: http://storage:8090/id/reserve

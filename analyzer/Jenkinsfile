@@ -1,0 +1,2 @@
+@Library('github_ci_functions@main') _
+python_build('analyzer', 'analyzerapp', 'analyzer')

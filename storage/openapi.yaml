@@ -1,0 +1,165 @@
+openapi: 3.0.0
+servers: []
+info:
+  title: Parking Space API
+  description: Reports data on availability of parking spaces
+  contact:
+    email: jparras1@my.bcit.ca
+  version: "1.1.0"
+paths:
+  /spots/occupied:
+    get:
+      summary: Gets the parking spots that are occupied
+      description: Gets the parking spots that are occupied after the timestamp
+      operationId: app.get_spots_occupied
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+        - name: end_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+      responses:
+        '200':
+          description: Successfully returned a list of occupied parking spots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - spot_id
+                    - timestamp
+                  properties:
+                    spot_id:
+                      type: integer
+                      description: The parking spot number
+                      example: 17
+                    timestamp:
+                      type: string
+                      description: timestamp when the spot was occupied
+                      format: date-time
+                      example: '2016-08-29T09:12:33.001Z'
+
+  /spots/reservation:
+    get:
+      summary: Gets the parking spots that are reserved
+      description: Gets the parking spots that are reserved after the timestamp
+      operationId: app.get_spots_reserved
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+        - name: end_timestamp
+          in: query
+          description: Limits the number of readings returned
+          schema:
+            type: integer
+            example: 1739480817
+      responses:
+        '200':
+          description: Successfully returned a list of reserved parking spots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - spot_id
+                    - parking_time
+                    - timestamp
+                  properties:
+                    spot_id:
+                      type: integer
+                      description: The parking spot number
+                      example: 17
+                    parking_time:
+                      type: string
+                      description: The time when the user will occupy the spot
+                      example: '2016-08-29T09:12:33.001Z'
+                    timestamp:
+                      type: string
+                      description: timestamp when the spot was reserved
+                      format: date-time
+                      example: '2016-08-29T09:12:33.001Z'
+
+  /count/event:
+    get:
+      summary: Gets the number of records in the database
+      description: Gets the number of records in the database
+      operationId: app.get_num_events
+      responses:
+        '200':
+          description: Successfully returned the counts for each event in the database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  park_event:
+                    type: integer
+                    description: The parking event count
+                    example: 17
+                  reserve_event:
+                    type: integer
+                    description: The parking event count
+                    example: 17
+
+  /id/park:
+    get:
+      summary: Gets the list of event IDs and trace IDs of the park event
+      description: Gets the list of event IDs and trace IDs of the park event
+      operationId: app.get_park_event_list
+      responses:
+        '200':
+          description: Successfully returned a list event ids and trace ids of the park event
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id:
+                      type: string
+                      description: the id of an event
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    trace_id:
+                      type: string
+                      description: the trace id of an event
+                      example: '3434efeasef'
+
+  /id/reserve:
+    get:
+      summary: Gets the list of event IDs and trace IDs of the reserve event
+      description: Gets the list of event IDs and trace IDs of the reserve event
+      operationId: app.get_reserve_event_list
+      responses:
+        '200':
+          description: Successfully returned a list event ids and trace ids of the reserve event
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id:
+                      type: string
+                      description: the id of an event
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    trace_id:
+                      type: string
+                      description: the trace id of an event
+                      example: '3434efeasef'
