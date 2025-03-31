@@ -1,5 +1,0 @@
-connexion[flask, uvicorn, swagger-ui]
-httpx
-pykafka
-setuptools
-starlette
