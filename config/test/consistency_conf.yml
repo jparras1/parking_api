@@ -6,12 +6,12 @@ event_type:
   reserve_event: reserve_spot
 eventstores:
   processing_stats:
-    stats_url: http://processing/processing/stats
+    stats_url: http://processing:8100/processing/stats
   analyzer_stats:
-    stats_url: http://analyzer/analyzer/stats
-    park_ids_url: http://analyzer/analyzer/id/park
-    reserve_ids_url: http://analyzer/analyzer/id/reserve
+    stats_url: http://analyzer:8110/analyzer/stats
+    park_ids_url: http://analyzer:8110/analyzer/id/park
+    reserve_ids_url: http://analyzer:8110/analyzer/id/reserve
   storage_stats:
-    stats_url: http://storage/storage/count/event
-    park_ids_url: http://storage/storage/id/park
-    reserve_ids_url: http://storage/storage/id/reserve
+    stats_url: http://storage:8090/storage/count/event
+    park_ids_url: http://storage:8090/storage/id/park
+    reserve_ids_url: http://storage:8090/storage/id/reserve
