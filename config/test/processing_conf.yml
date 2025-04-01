@@ -5,6 +5,6 @@ scheduler:
   interval: 3
 eventstores:
   park:
-    url: http://storage/storage/spots/occupied
+    url: http://storage:8090/storage/spots/occupied
   reserve:
-    url: http://storage/storage/spots/reservation
+    url: http://storage:8090/storage/spots/reservation
