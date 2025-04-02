@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   title: Consistency API
   contact:
-    email: jparras1@my.bcit.ca
+    email: jparras11@my.bcit.ca
 
 paths:
   /update:
@@ -33,7 +33,57 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Checks'
+                type: object
+                required:
+                - counts
+                - missing_in_db
+                - missing_in_queue
+                - last_updated
+                properties:
+                  last_updated:
+                    type: integer
+                  counts:
+                    type: object
+                    properties:
+                      db:
+                        type: object
+                        properties:
+                          event1:
+                            type: integer
+                          event2:
+                            type: integer
+                      queue:
+                        type: object
+                        properties:
+                          event1:
+                            type: integer
+                          event2:
+                            type: integer
+                      processing:
+                        type: object
+                        properties:
+                          event1:
+                            type: integer
+                          event2:
+                            type: integer
+                  missing_in_db:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event_id:
+                          type: string
+                        trace_id:
+                          type: string
+                  missing_in_queue:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event_id:
+                          type: string
+                        trace_id:
+                          type: string
         '404':
           description: No checks have been run
           content:
@@ -43,58 +93,3 @@ paths:
                 properties:
                   message:
                     type: string
-components:
-  schemas:
-    Checks:
-      required:
-      - counts
-      - missing_in_db
-      - missing_in_queue
-      - last_updated
-      type: object
-      properties:
-        last_updated:
-          type: integer
-        counts:
-          type: object
-          properties:
-            db:
-              type: object
-              properties:
-                event1:
-                  type: integer
-                event2:
-                  type: integer
-            queue:
-              type: object
-              properties:
-                event1:
-                  type: integer
-                event2:
-                  type: integer
-            processing:
-              type: object
-              properties:
-                event1:
-                  type: integer
-                event2:
-                  type: integer
-        missing_in_db:
-          type: array
-          items:
-            type: object
-            properties:
-              event_id:
-                type: string
-              trace_id:
-                type: string
-        missing_in_queue:
-          type: array
-          items:
-            type: object
-            properties:
-              event_id:
-                type: string
-              trace_id:
-                type: string
-
