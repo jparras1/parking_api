@@ -107,6 +107,51 @@ h1 {
     display: none;
 } */
 
+/* Consistency Check Section */
+#consistency {
+    margin-top: 1em;
+    background-color: #ecf0f1;
+    border: 1px solid #ddd;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#consistency h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+#consistency-check-info, #consistency-check-time {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    white-space: pre-line;
+    text-align: left;
+}
+
+/* Style for Submit Button */
+#check-consistency-btn {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    margin: 10px auto;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#check-consistency-btn:hover {
+    background-color: #2980b9;
+}
+
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
