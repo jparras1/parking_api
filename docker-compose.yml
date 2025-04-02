@@ -19,7 +19,7 @@ services:
     #   - "8080:8080" # host_machine port:container port
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 4
     environment:
       - HOST=${HOST}
     networks:
