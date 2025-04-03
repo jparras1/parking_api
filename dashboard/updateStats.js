@@ -102,9 +102,15 @@ const checkConsistency = () => {
             );
 
             updateCodeDiv("missing-data-info", 
-                `IDs missing in Database: ${result.missing_in_db}
-                IDs missing in Queue: ${result.missing_in_queue}`
-            );
+                `IDs missing in Database:\n` +
+                result.missing_in_db.map(entry => 
+                    `Device ID: ${entry.device_id}, Trace ID: ${entry.trace_id}, Type: ${entry.type}`
+                ).join("\n") +
+                `\n\nIDs missing in Queue:\n` +
+                result.missing_in_queue.map(entry => 
+                    `Device ID: ${entry.device_id}, Trace ID: ${entry.trace_id}, Type: ${entry.type}`
+                ).join("\n")
+            );            
 
             updateCodeDiv("consistency-check-update", 
                 `Last Updated: ${result.last_updated}`
