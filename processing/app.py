@@ -107,7 +107,6 @@ def populate_stats():
         json.dump(data, post_stats, indent=2)
 
     logger.info("Processing completed")
-    logger.info("Processing done")
 
 
 def init_scheduler():
