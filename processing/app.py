@@ -49,7 +49,7 @@ def max_duration(prev_max, current_entry):
 
 def populate_stats():
     """connect to storage"""
-    logger.info("Processing started")
+    logger.info("Processing starting now")
 
     # get stats
     data, status = get_stats()
