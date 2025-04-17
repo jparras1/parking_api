@@ -127,4 +127,4 @@ app.add_api("anomaly.yaml",
             validate_responses=True)
 if __name__ == "__main__":
     host = os.getenv("HOST")
-    app.run(port=8120, host=host)
+    app.run(port=8130, host=host)
