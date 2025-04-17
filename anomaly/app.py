@@ -75,7 +75,7 @@ def update_anomalies():
             event_payload = {
                 "device_id" : data['payload']['device_id'],
                 "trace_id" : data['payload']['trace_id'],
-                "event_type" : app_config['event_type']['reserve_event'],
+                "event_type" : app_config['event_type']['park_event'],
                 "anomaly_type" : "Parking duration exceeded",
                 "description" : f"Detected: {data['payload']['parking_duration']}; too high (threshold 200)"
             }
@@ -99,7 +99,9 @@ def get_anomalies(event_type=None):
     
     results = []
     if not event_type:
-        return data, 204
+        for anomaly in data:
+            results.append(anomaly)
+        return results, 204
     elif (event_type == app_config['event_type']['park_event']) or (event_type == app_config['event_type']['reserve_event']):
         for anomaly in data:
             if anomaly['event_type'] == event_type:
