@@ -122,7 +122,7 @@ if "CORS_ALLOW_ALL" in os.environ and os.environ["CORS_ALLOW_ALL"] == "yes":
     )
 
 app.add_api("anomaly.yaml",
-            base_path="/consistency",
+            base_path="/anomaly",
             strict_validation=True,
             validate_responses=True)
 if __name__ == "__main__":
