@@ -86,7 +86,7 @@ def update_anomalies():
         json.dump(results, post_stats, indent=2)
 
     consumer.stop()
-    return {"anomalies_count" : f"{len(results)}"}, 201
+    return {"anomalies_count" : len(results)}, 201
 
 def get_anomalies(event_type=None):
     # check if JSON file doesn't exists
