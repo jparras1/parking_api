@@ -1,4 +1,36 @@
 services:
+  anomaly:
+    container_name: anomaly
+    build:
+      context: anomaly
+      dockerfile: Dockerfile
+    # ports:
+    #   - "8130:8130"
+    environment:
+      - HOST=${HOST}
+      - CORS_ALLOW_ALL=no
+    networks:
+      - my_network
+    env_file:
+      - .env
+    # CHANGE THE PATHS OF THESE VOLUMES
+    volumes:
+      - type: bind
+        source: ${PROJECT_DIR}/logs/anomaly.log
+        target: /app/app.log
+      - type: bind
+        source: ${PROJECT_DIR}/config/test/log_conf.yml
+        target: /app/log_conf.yml
+      - type: bind
+        source: ${PROJECT_DIR}/config/test/anomaly.yml
+        target: /app/app_conf.yml
+      - type: bind
+        source: ${PROJECT_DIR}/data/anomaly/anomaly.json
+        target: /app/stats.json
+    depends_on:
+      - storage
+      - analyzer
+      - processing
   dashboard:
     container_name: dashboard
     build:

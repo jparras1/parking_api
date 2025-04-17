@@ -1,0 +1,10 @@
+version: 1
+datastore:
+  filename: stats.json
+event_type:
+  park_event: park_car
+  reserve_event: reserve_spot
+kafka:
+  hostname: kafka
+  port: 29092
+  topic: events
