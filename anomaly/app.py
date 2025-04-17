@@ -98,10 +98,12 @@ def get_anomalies(event_type=None):
         data = json.load(fp_file)
     
     results = []
+    if not data:
+        return "No anomalies", 204
     if not event_type:
         for anomaly in data:
             results.append(anomaly)
-        return results, 204
+        return results, 200
     elif (event_type == app_config['event_type']['park_event']) or (event_type == app_config['event_type']['reserve_event']):
         for anomaly in data:
             if anomaly['event_type'] == event_type:
